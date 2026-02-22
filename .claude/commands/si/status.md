@@ -1,0 +1,87 @@
+---
+name: status
+description: View SI reports and pending improvement items
+disable-model-invocation: true
+allowed-tools: Read, Glob, Grep
+---
+
+# /si:status — Self-Improvement Status
+
+Quick view of the current SI state for this project.
+
+## Workflow
+
+### 1. Check for reports directory
+
+Check if `.claude/project/reports/` exists. If not:
+```
+No SI reports found. Run /si:observe to start.
+```
+
+### 2. Read improvement-plan.md
+
+Read `.claude/project/reports/improvement-plan.md`. Count items by status and category:
+
+- **Pending** — items awaiting review
+- **Approved** — items selected but not yet applied
+- **Applied** — items that have been implemented
+- **Rejected** — items explicitly rejected
+
+Also count by category:
+- **skill** — Claude meta-artifact improvements
+- **code** — source code quality
+- **workflow** — process and directive improvements
+- **structure** — file organization
+
+### 3. Check observation date
+
+Read `.claude/project/reports/reasoning.md` for the last observation date.
+Read `.claude/project/reports/system-observations.md` for additional context.
+
+### 4. Print status
+
+```
+SI Status
+=========
+
+Last observation: YYYY-MM-DD
+Reports directory: .claude/project/reports/
+
+Improvements by status:
+  Pending:  [N]
+  Approved: [N]
+  Applied:  [N]
+  Rejected: [N]
+
+Pending by category:
+  skill:     [N] items
+  code:      [N] items
+  workflow:  [N] items
+  structure: [N] items
+
+[If pending > 0:]
+Next step: Review pending items, then run /si:apply
+
+[If pending == 0 and applied > 0:]
+All items processed. Run /si:observe for a fresh analysis.
+
+[If no reports at all:]
+No observations yet. Run /si:observe to start.
+```
+
+### 5. Optionally show pending items
+
+If there are pending items, list them briefly:
+
+```
+Pending items:
+  [ID]. [Category] — [Title]
+  [ID]. [Category] — [Title]
+  ...
+```
+
+## Constraints
+
+- **Read-only.** This command never modifies any files.
+- **Keep output concise.** Status should be scannable in 5 seconds.
+- **Show actionable next step.** Always tell the user what to do next.
