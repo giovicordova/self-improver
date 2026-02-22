@@ -37,8 +37,7 @@ cp .claude/agents/si-*.md ~/.claude/agents/
 mkdir -p ~/.claude/commands/si
 cp .claude/commands/si/*.md ~/.claude/commands/si/
 
-# Copy the /us command (update state)
-cp .claude/commands/us.md ~/.claude/commands/
+# The /si:us command is included in the si/ commands directory above
 ```
 
 ## Usage
@@ -56,7 +55,7 @@ In any Claude Code session:
 /si:apply
 
 # Update project state snapshot
-/us
+/si:us
 ```
 
 ## How It Works
@@ -78,13 +77,15 @@ Reports live in `.claude/project/reports/` and are designed to be read by Claude
       observe.md    # Orchestrator — spawns observers
       apply.md      # Routes approved items by category
       status.md     # Quick status view
-    us.md           # Update state.md snapshot
+      us.md         # Update state.md snapshot
   agents/
     si-skill-observer.md
     si-code-observer.md
     si-workflow-observer.md
     si-structure-observer.md
 ```
+
+> **Note:** The `.claude/CLAUDE.md` and `.claude/project/` files in this repo are specific to SI's own development. You don't need them to use SI in your projects.
 
 ## Design Principles
 

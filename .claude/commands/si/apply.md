@@ -2,6 +2,7 @@
 name: apply
 description: Apply human-approved improvements from observers, routed by category
 disable-model-invocation: true
+allowed-tools: Read, Glob, Grep, Bash, Write, Edit, AskUserQuestion, EnterPlanMode, ExitPlanMode
 ---
 
 # /si:apply — Apply Improvements

@@ -21,7 +21,7 @@ You are spawned by `/si:observe` with project context. Your job: find structural
 **Process:**
 
 1. **Map structure** — Get a high-level view:
-   - Use Bash: `find . -type f -not -path '*/node_modules/*' -not -path '*/.git/*' -not -path '*/dist/*' -not -path '*/.next/*' -not -path '*/__pycache__/*' | head -200`
+   - Use Bash: `find . -type f -not -path '*/node_modules/*' -not -path '*/.git/*' -not -path '*/dist/*' -not -path '*/.next/*' -not -path '*/__pycache__/*' -not -path '*/.venv/*' -not -path '*/venv/*' -not -path '*/target/*' -not -path '*/build/*' -not -path '*/.cache/*' -not -path '*/coverage/*' -not -path '*/vendor/*' | head -200`
    - Use Glob to find key file types and their distribution
    - Analyze directory depth
 

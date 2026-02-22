@@ -4,8 +4,9 @@ A self-improvement system for Claude Code that observes execution patterns, anal
 
 ## Bootstrap
 
-Read `project/state.md` at the start of every session. It describes what exists and what's next.
-If `project/vision.md` exists, read it too — the gap between vision and state is the work.
+Read `.claude/project/state.md` at the start of every session. It describes what exists and what's next.
+If `.claude/project/vision.md` exists, read it too — the gap between vision and state is the work.
+If `.claude/project/reports/active-directives.md` exists, read it too — these are learned directives from previous observations.
 
 ## Architecture
 
@@ -22,7 +23,7 @@ SI follows the **orchestrator + specialized subagent** pattern:
 | `/si:observe` | Spawn observers, collect findings, write improvement-plan.md |
 | `/si:apply` | User selects items, routes by category, executes changes |
 | `/si:status` | Quick view of pending/applied/rejected items |
-| `/us` | Rebuild state.md from actual codebase |
+| `/si:us` | Rebuild state.md from actual codebase |
 
 ### Agents
 

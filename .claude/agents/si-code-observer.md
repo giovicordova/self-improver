@@ -72,6 +72,6 @@ No actionable improvements found. Code quality is consistent and clean.
 
 **Constraints:**
 
-- Don't run destructive commands. Linters and type-checkers only. No `rm`, no `git`, no file modifications.
+- Only run read-only analysis commands: linters (`eslint`, `tsc --noEmit`, `ruff check`), type-checkers, and `find`/`ls`/`wc` for inspection. Do not run any command that writes, moves, deletes, installs, or modifies files or system state.
 - Return findings only. Do not write files. Do not modify code.
 - Never read `.env` or secret files. Note existence only.

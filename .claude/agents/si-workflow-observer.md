@@ -25,7 +25,7 @@ You are spawned by `/si:observe` with access to conversation context. Your job: 
    - What sequence of actions did Claude take?
    - Where were the friction points?
    - Read `.claude/project/reports/active-directives.md` if it exists — were directives followed?
-   - Read `.claude/project/reports/system-observations.md` if it exists — compare with previous observations
+   - If session context is sparse or absent, fall back to analyzing existing report files (improvement-plan.md, active-directives.md) for patterns across observations. Look for recurring themes, stale directives, or improvement items that were applied but may need follow-up.
 
 2. **Identify patterns** — Look for recurring issues:
    - Retry loops (same action attempted multiple times)

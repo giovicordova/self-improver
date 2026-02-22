@@ -35,8 +35,7 @@ Also count by category:
 
 ### 3. Check observation date
 
-Read `.claude/project/reports/reasoning.md` for the last observation date.
-Read `.claude/project/reports/system-observations.md` for additional context.
+Read the most recent item in `.claude/project/reports/improvement-plan.md` for approximate last observation date.
 
 ### 4. Print status
 

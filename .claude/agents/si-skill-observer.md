@@ -20,8 +20,9 @@ You are spawned by `/si:observe` with project context. Your job: find actionable
 **Process:**
 
 1. **Discover** — Find all Claude Code meta-artifacts using Glob:
-   - `~/.claude/skills/**/*.md`, `~/.claude/commands/**/*.md`, `~/.claude/agents/*.md`, `~/.claude/CLAUDE.md`
    - `.claude/skills/**/*.md`, `.claude/commands/**/*.md`, `.claude/agents/*.md`, `.claude/CLAUDE.md`
+   - Only scan `~/.claude/` if the orchestrator explicitly requests global analysis or if the project has no `.claude/` directory.
+   - Always note whether findings are project-level or global-level.
    - Read each file found.
 
 2. **Analyze** — Evaluate each artifact against quality criteria:
