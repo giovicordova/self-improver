@@ -31,12 +31,25 @@ Also count by category:
 - **code** — source code quality
 - **workflow** — process and directive improvements
 - **structure** — file organization
+- **security** — vulnerability and security hardening
 
-### 3. Check observation date
+### 3. Check apply queue
+
+Read `.claude/project/reports/apply-queue.md`. If it exists, parse the Progress line and batch statuses. Include in output:
+
+```
+Apply queue in progress:
+  [completed]/[total] batches ([X] items applied, [Y] items remaining)
+  Run /si:apply to resume
+```
+
+If the file doesn't exist, skip this section.
+
+### 4. Check observation date
 
 Read the most recent item in `.claude/project/reports/improvement-plan.md` for approximate last observation date.
 
-### 4. Print status
+### 5. Print status
 
 ```
 SI Status
@@ -55,6 +68,7 @@ Pending by category:
   code:      [N] items
   workflow:  [N] items
   structure: [N] items
+  security:  [N] items
 
 [If pending > 0:]
 Next step: Review pending items, then run /si:apply
@@ -66,7 +80,21 @@ All items processed. Run /si:observe for a fresh analysis.
 No observations yet. Run /si:observe to start.
 ```
 
-### 5. Optionally show pending items
+### 6. Check security audit report
+
+If `.claude/project/reports/security-audit.md` exists, read it and include a security section:
+
+```
+Security Audit:
+  Last audit: YYYY-MM-DD
+  Critical: [N]  High: [N]  Medium: [N]  Low: [N]  Info: [N]
+  [If Critical > 0:] ⚠ Critical findings require attention
+  Run /si:security-audit for a fresh scan
+```
+
+If the file doesn't exist, skip this section.
+
+### 7. Optionally show pending items
 
 If there are pending items, list them briefly:
 
