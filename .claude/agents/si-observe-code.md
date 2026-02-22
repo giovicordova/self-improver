@@ -1,5 +1,5 @@
 ---
-name: si-code-observer
+name: si-observe-code
 description: Analyzes source code quality, patterns, anti-patterns, and optimization opportunities across the project. Spawned by /si:observe orchestrator.
 tools: Read, Glob, Grep, Bash
 model: inherit

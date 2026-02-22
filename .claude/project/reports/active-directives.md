@@ -5,4 +5,5 @@
 - When running `/si:observe`, provide detailed session context to the workflow observer — errors, corrections, retries, outcomes.
 - All SI commands live under the `si:` namespace. Use `/si:us` not `/us`.
 - When an improvement removes a file or output, delete existing instances as part of the apply step.
-- After applying changes in the SI repo, sync to global: `cp .claude/agents/si-*.md ~/.claude/agents/ && cp .claude/commands/si/*.md ~/.claude/commands/si/`
+- After applying changes in the SI repo, sync to global: `mkdir -p ~/.claude/agents ~/.claude/commands/si && cp .claude/agents/si-*.md ~/.claude/agents/ && cp .claude/commands/si/*.md ~/.claude/commands/si/` (includes all observers and security agents).
+- After `/si:apply` completes a full queue, prompt: "These changes are uncommitted. Commit now with a descriptive message, or continue working?"

@@ -88,7 +88,7 @@ If `.claude/project/reports/security-audit.md` exists, read it and include a sec
 Security Audit:
   Last audit: YYYY-MM-DD
   Critical: [N]  High: [N]  Medium: [N]  Low: [N]  Info: [N]
-  [If Critical > 0:] ⚠ Critical findings require attention
+  [If Critical > 0:] ** CRITICAL findings require attention
   Run /si:security-audit for a fresh scan
 ```
 

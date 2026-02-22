@@ -19,14 +19,14 @@ Every Claude Code session generates signal: what worked, what failed, what the u
 ## Where It's Going
 
 ### Near-term
-- Polish the four observers (skill, code, workflow, structure) for higher signal-to-noise
+- Polish the five observers (skill, code, workflow, structure, security) for higher signal-to-noise
 - Add cross-observer deduplication and conflict resolution
 - Build a feedback loop: track which applied improvements actually helped
 
 ### Medium-term
 - **Learning across projects**: SI currently analyzes one project at a time. It should accumulate patterns that transfer — "this anti-pattern appears in 3 of your projects"
 - **Proactive observation**: Instead of explicit `/si:observe`, trigger observation automatically when a session has enough signal (errors, corrections, retries)
-- **Observer specialization**: Domain-specific observers (React patterns, API design, database queries) that activate based on the project's stack
+- **Observer specialization**: Domain-specific observers (React patterns, API design, database queries) that activate based on the project's stack. The security audit system (`/si:security-audit` with 4 deep audit agents) is the first example of this — specialized agents for secrets, dependencies, code vulnerabilities, and infrastructure.
 
 ### Long-term
 - **Self-improving observers**: The observers themselves should improve over time. If an observer consistently produces low-value proposals, that's a signal to improve its prompts.

@@ -42,9 +42,17 @@ If no queue file exists, fall through to Step 2.
 
 Read `.claude/project/reports/improvement-plan.md`. Collect all items with `**Status:** pending`.
 
-If no pending items exist, report and exit:
+Also read `.claude/project/reports/security-audit.md` if it exists. Collect findings with `Status: open`. Translate each to improvement-plan format:
+- `Remediation:` → `**Proposed:**`
+- `Risk:` → `**Impact:**`
+- `Severity:` + `Evidence:` → `**Evidence:**`
+- Set `**Category:** security`
+- Use finding title as item title
+- Only include Critical and High severity findings — Medium/Low stay informational in the audit report
+
+If no pending items exist in either source, report and exit:
 ```
-No pending items in improvement-plan.md. Run /si:observe first.
+No pending items in improvement-plan.md and no open Critical/High findings in security-audit.md. Run /si:observe or /si:security-audit first.
 ```
 
 Group items by category (`skill`, `code`, `workflow`, `structure`, `security`) and count each group.
@@ -256,7 +264,7 @@ Each item routes to the appropriate action based on its category.
 - Route by the nature of the fix:
   - Source code fixes (injection, auth, XSS) → same as code items (plan mode required)
   - Configuration fixes (headers, CORS, Docker) → same as structure items (show changes, apply directly)
-  - Dependency updates → run appropriate package manager command, verify lockfile changed, run tests if available. Show before/after versions before executing.
+  - Dependency updates → print the exact package manager command (e.g., `npm install lodash@^4.17.21`) and ask for confirmation before executing. Package updates can introduce breaking changes. After user confirms, run the command, verify lockfile changed, run tests if available. Show before/after versions.
   - Process changes (secret rotation, dependency updates) → same as workflow items (update active-directives.md)
 - **Secret rotation detection:** When a security finding's title contains "hardcoded", "exposed credential", or "leaked secret", print a warning:
   "This item requires rotating a credential. You must do this manually:
@@ -305,7 +313,7 @@ Skill files modified: [N]
 Structure changes: [N]
 
 [If repo files modified:]
-Sync to global: cp .claude/agents/si-*.md ~/.claude/agents/ && cp .claude/commands/si/*.md ~/.claude/commands/si/
+Sync to global: mkdir -p ~/.claude/agents ~/.claude/commands/si && cp .claude/agents/si-*.md ~/.claude/agents/ && cp .claude/commands/si/*.md ~/.claude/commands/si/
 ```
 
 ## Plain-Language Translation Rule

@@ -24,15 +24,21 @@ SI follows the **orchestrator + specialized subagent** pattern:
 | `/si:apply` | User selects items, routes by category, executes changes |
 | `/si:status` | Quick view of pending/applied/rejected items |
 | `/si:us` | Rebuild state.md from actual codebase |
+| `/si:security-audit` | Deep security audit — spawns 4 specialized security agents |
 
 ### Agents
 
 | Agent | Domain | Tools |
 |-------|--------|-------|
-| `si-skill-observer` | Skills, commands, agents, CLAUDE.md rules | Read, Glob, Grep |
-| `si-code-observer` | Source code quality, anti-patterns | Read, Glob, Grep, Bash |
-| `si-workflow-observer` | Session efficiency, error patterns | Read, Glob, Grep |
-| `si-structure-observer` | File organization, naming, configs | Read, Glob, Grep, Bash |
+| `si-observe-skill` | Skills, commands, agents, CLAUDE.md rules | Read, Glob, Grep |
+| `si-observe-code` | Source code quality, anti-patterns | Read, Glob, Grep, Bash |
+| `si-observe-workflow` | Session efficiency, error patterns | Read, Glob, Grep |
+| `si-observe-structure` | File organization, naming, configs | Read, Glob, Grep, Bash |
+| `si-observe-security` | Quick security surface scan (secrets, injection, config) | Read, Glob, Grep, Bash |
+| `si-audit-secrets` | Deep audit: hardcoded creds, .env leaks, git history | Read, Glob, Grep, Bash |
+| `si-audit-deps` | Deep audit: CVEs, outdated packages, lockfile integrity | Read, Glob, Grep, Bash |
+| `si-audit-code` | Deep audit: OWASP Top 10 code vulnerabilities | Read, Glob, Grep, Bash |
+| `si-audit-infra` | Deep audit: Docker, CI/CD, IaC, security headers | Read, Glob, Grep, Bash |
 
 ## Conventions
 
@@ -41,6 +47,15 @@ SI follows the **orchestrator + specialized subagent** pattern:
 - improvement-plan.md is append-only for pending items; items move between Pending/Applied/Rejected sections
 - active-directives.md stays concise (read every session)
 - All observers spawn in parallel — sequential spawning defeats the purpose
+
+### Report Lifecycles
+
+| Report | Lifecycle | Notes |
+|--------|-----------|-------|
+| `improvement-plan.md` | Append-only | Items move between Pending/Applied/Rejected sections, never deleted |
+| `security-audit.md` | Replace-on-run | Previous report archived as `security-audit-YYYY-MM-DD.md` before overwrite |
+| `active-directives.md` | Edit-in-place | Modified by `/si:apply` when workflow items are approved |
+| `apply-queue.md` | Ephemeral | Working state during `/si:apply`, deleted when all batches complete |
 
 ## Development
 

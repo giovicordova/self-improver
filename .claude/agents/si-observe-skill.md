@@ -1,5 +1,5 @@
 ---
-name: si-skill-observer
+name: si-observe-skill
 description: Analyzes Claude Code skill files, command definitions, agent prompts, and CLAUDE.md rules for quality and improvement opportunities. Spawned by /si:observe orchestrator.
 tools: Read, Glob, Grep
 model: inherit

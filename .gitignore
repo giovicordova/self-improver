@@ -9,7 +9,7 @@
 # Claude Code plans (session-specific)
 .claude/plans/
 
-# SI generated reports (only improvement-plan.md and active-directives.md are persistent)
-.claude/project/reports/*.md
-!.claude/project/reports/improvement-plan.md
-!.claude/project/reports/active-directives.md
+# SI ephemeral reports (generated per-run, not persistent)
+.claude/project/reports/apply-queue.md
+.claude/project/reports/security-audit.md
+.claude/project/reports/security-audit-*.md

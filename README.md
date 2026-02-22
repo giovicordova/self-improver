@@ -16,10 +16,22 @@ Each observer runs in a fresh context window, giving it full attention on its do
 
 | Observer | What It Analyzes |
 |----------|-----------------|
-| **si-skill-observer** | Claude Code skills, commands, agents, CLAUDE.md rules — prompt clarity, tool restrictions, consistency |
-| **si-code-observer** | Source code — anti-patterns, dead code, performance issues, style drift |
-| **si-workflow-observer** | Session execution — error patterns, wasted steps, missed parallelization, user corrections |
-| **si-structure-observer** | Project organization — file layout, naming conventions, module boundaries, config health |
+| **si-observe-skill** | Claude Code skills, commands, agents, CLAUDE.md rules — prompt clarity, tool restrictions, consistency |
+| **si-observe-code** | Source code — anti-patterns, dead code, performance issues, style drift |
+| **si-observe-workflow** | Session execution — error patterns, wasted steps, missed parallelization, user corrections |
+| **si-observe-structure** | Project organization — file layout, naming conventions, module boundaries, config health |
+| **si-observe-security** | Quick security surface scan — secrets, injection patterns, configuration gaps |
+
+## Security Audit
+
+For deep security analysis, run `/si:security-audit`. This spawns 4 specialized audit agents in parallel:
+
+| Agent | What It Audits |
+|-------|---------------|
+| **si-audit-secrets** | Hardcoded credentials, .env exposure, git history leaks, .gitignore gaps |
+| **si-audit-deps** | CVEs, outdated packages, lockfile integrity, typosquatting risks |
+| **si-audit-code** | OWASP Top 10 code vulnerabilities — injection, auth bypass, SSRF, XSS |
+| **si-audit-infra** | Docker, CI/CD, IaC misconfigurations, security headers |
 
 ## Installation
 
@@ -54,6 +66,9 @@ In any Claude Code session:
 # Apply selected improvements
 /si:apply
 
+# Deep security audit
+/si:security-audit
+
 # Update project state snapshot
 /si:us
 ```
@@ -74,15 +89,21 @@ Reports live in `.claude/project/reports/` and are designed to be read by Claude
 .claude/
   commands/
     si/
-      observe.md    # Orchestrator — spawns observers
-      apply.md      # Routes approved items by category
-      status.md     # Quick status view
-      us.md         # Update state.md snapshot
+      observe.md         # Orchestrator — spawns observers
+      apply.md           # Routes approved items by category
+      status.md          # Quick status view
+      security-audit.md  # Deep security audit orchestrator
+      us.md              # Update state.md snapshot
   agents/
-    si-skill-observer.md
-    si-code-observer.md
-    si-workflow-observer.md
-    si-structure-observer.md
+    si-observe-skill.md       # Skill/command/agent quality
+    si-observe-code.md        # Source code analysis
+    si-observe-workflow.md    # Session efficiency
+    si-observe-structure.md   # File organization
+    si-observe-security.md    # Quick security scan
+    si-audit-secrets.md       # Deep: credentials & leaks
+    si-audit-deps.md          # Deep: dependency CVEs
+    si-audit-code.md          # Deep: OWASP Top 10
+    si-audit-infra.md         # Deep: infrastructure config
 ```
 
 > **Note:** The `.claude/CLAUDE.md` and `.claude/project/` files in this repo are specific to SI's own development. You don't need them to use SI in your projects.

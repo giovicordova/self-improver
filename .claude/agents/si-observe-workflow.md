@@ -1,5 +1,5 @@
 ---
-name: si-workflow-observer
+name: si-observe-workflow
 description: Analyzes session execution patterns, tool usage efficiency, error patterns, and user correction frequency to identify workflow improvements. Spawned by /si:observe orchestrator.
 tools: Read, Glob, Grep
 model: inherit
@@ -26,6 +26,7 @@ You are spawned by `/si:observe` with access to conversation context. Your job: 
    - Where were the friction points?
    - Read `.claude/project/reports/active-directives.md` if it exists — were directives followed?
    - If session context is sparse or absent, fall back to analyzing existing report files (improvement-plan.md, active-directives.md) for patterns across observations. Look for recurring themes, stale directives, or improvement items that were applied but may need follow-up.
+   - If improvement-plan.md also doesn't exist (fresh project), use second-level fallback: analyze active-directives.md for staleness, check CLAUDE.md conventions for internal consistency, and assess whether the observer/command architecture has process gaps (e.g., missing linkage between commands, undocumented lifecycles).
 
 2. **Identify patterns** — Look for recurring issues:
    - Retry loops (same action attempted multiple times)

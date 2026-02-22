@@ -1,5 +1,5 @@
 ---
-name: si-structure-observer
+name: si-observe-structure
 description: Analyzes project file organization, naming conventions, module boundaries, and configuration health for structural improvements. Spawned by /si:observe orchestrator.
 tools: Read, Glob, Grep, Bash
 model: inherit

@@ -28,25 +28,32 @@ Then read these files to understand the project:
 
 Check what the project contains and spawn relevant observers **in parallel** using the Task tool. Launch them simultaneously — fresh context per observer = peak quality.
 
-**si-skill-observer** — Spawn if ANY of these exist:
+**si-observe-skill** — Spawn if ANY of these exist:
 - `.claude/skills/`, `.claude/commands/`, `.claude/agents/`
 - `CLAUDE.md` with rules/instructions
 
-**si-code-observer** — Spawn if source code exists:
+**si-observe-code** — Spawn if source code exists:
 - `src/`, `lib/`, `app/`, `pages/`, or any directory with `.ts`, `.tsx`, `.js`, `.py`, `.rs`, `.go` files
 - Has a `package.json`, `Cargo.toml`, `go.mod`, `pyproject.toml`, or similar
 
-**si-workflow-observer** — Always spawn. It analyzes the current session's execution patterns from conversation context.
+**si-observe-workflow** — Always spawn. It analyzes the current session's execution patterns from conversation context.
 
-**si-structure-observer** — Spawn if the project has structural complexity:
+**si-observe-structure** — Spawn if the project has structural complexity:
 - Has a `.claude/` directory with agents and commands (meta-projects like SI itself)
 - OR has 5+ files of any type across 2+ directories
+
+**si-observe-security** — Spawn if ANY of these exist:
+- Executable source code files (`.ts`, `.js`, `.py`, `.go`, `.rs`, `.rb`, `.java`, etc.)
+- Environment files (`.env`, `.env.*`)
+- Docker or CI/CD files (`Dockerfile`, `.github/workflows/`, etc.)
+- Note: Configuration files alone (`.json`, `.yml`, `.toml`) do NOT warrant a security scan. Meta-projects with only markdown/config have no security surface.
 
 For each observer, provide this context in the prompt:
 - Project path and name
 - What CLAUDE.md says about conventions
 - Previous improvement-plan.md items (so observers don't duplicate)
-- For workflow observer: provide detailed session events — list every error, user correction, retry loop, and commands run with outcomes. If no significant session events occurred, note that explicitly so the observer can use its fallback analysis mode.
+- For security observer: also include the Summary section of `security-audit.md` (if it exists) so it can skip findings already documented in a prior deep audit
+- For workflow observer: provide detailed session events — list every error, user correction, retry loop, and commands run with outcomes. If `/si:observe` is the first or only command in this session, explicitly state "No prior session events — use fallback analysis mode."
 - For workflow observer: also include any recently-applied items (from improvement-plan.md ## Applied section) so the observer can assess whether they had the intended effect.
 
 ### 3. Collect and merge results
@@ -56,7 +63,7 @@ After all observers return:
 1. Collect all findings from all observers
 2. Assign sequential IDs continuing from the last ID in existing `improvement-plan.md`
 3. Deduplicate — if two proposals reference the same file AND propose the same type of change, keep the more specific one. If they describe different symptoms of the same root cause, keep both but add a cross-reference: "Related: #[other-ID]"
-4. Sort by category: skill, code, workflow, structure
+4. Sort by category: skill, code, workflow, structure, security
 
 ### 4. Write reports
 
@@ -64,7 +71,7 @@ After all observers return:
 
 ```markdown
 ### [ID]. [Title]
-**Category:** skill | code | workflow | structure
+**Category:** skill | code | workflow | structure | security
 **Evidence:** [1-line data reference]
 **Current:** [What happens now]
 **Proposed:** [What should change]
