@@ -27,7 +27,7 @@ Copy the agents and commands to your global Claude Code config:
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/self-improver.git
+git clone https://github.com/giovicordova/self-improver.git
 cd self-improver
 
 # Copy agents
@@ -93,6 +93,6 @@ Reports live in `.claude/project/reports/` and are designed to be read by Claude
 - **Evidence-based** — Every proposal references specific files, lines, or session events.
 - **Lightweight reports** — Written for Claude to consume, not for humans to study.
 
-## License
+---
 
-MIT
+Built by [@giovicordova](https://github.com/giovicordova) and Claude Code.
