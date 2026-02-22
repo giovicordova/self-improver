@@ -8,7 +8,7 @@ No source code. This is a Claude Code meta-project — markdown files defining a
 
 **Commands** (4 SI orchestrators):
 - `commands/si/observe.md` — spawns parallel observer agents, merges findings into improvement-plan.md
-- `commands/si/apply.md` — user selects improvements, routes by category (skill/code/workflow/structure)
+- `commands/si/apply.md` — interactive category-by-category walkthrough with plain-language descriptions, routes by category
 - `commands/si/status.md` — read-only status view of pending/applied/rejected items
 - `commands/si/us.md` — rebuilds state.md from actual codebase
 
@@ -71,8 +71,8 @@ Remote: origin → https://github.com/giovicordova/self-improver.git
 
 ## What's next
 
-1. **Commit the /si:apply results** — 18 improvements applied, ready to commit
-2. **Dogfood again** — run `/si:observe` on itself post-improvement to validate changes
+1. **Dogfood /si:apply** — run on a project with pending items to test the new interactive flow
+2. **Dogfood /si:observe** — run on itself post-improvement to validate changes
 3. **Build feedback loop** — track which applied improvements actually helped (Outcome field now exists but untested)
 4. **Proactive observation** — currently manual (`/si:observe`), vision calls for automatic triggering
 5. **Learning across projects** — accumulate transferable patterns (not started)

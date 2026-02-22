@@ -7,7 +7,7 @@ allowed-tools: Read, Glob, Grep, Bash, Write, Edit, AskUserQuestion, EnterPlanMo
 
 # /si:apply — Apply Improvements
 
-Read improvement-plan.md, let the user select items, route each by category, then execute on approval. Human review gate at every stage.
+Read improvement-plan.md, walk the user through each category conversationally, route approved items by category, then execute. Human review gate at every stage.
 
 ## Workflow
 
@@ -20,17 +20,70 @@ If no pending or approved items exist, report and exit:
 No pending or approved items in improvement-plan.md. Run /si:observe first.
 ```
 
-### 2. Present items for selection
+Group items by category (`skill`, `code`, `workflow`, `structure`) and count each group.
 
-Show all pending/approved items grouped by category. Use AskUserQuestion with multiSelect to let the user pick which items to apply now.
+### 2. Interactive selection
 
-Group by category in the options:
-- **[skill]** "3. Fix vague role in si-code-observer" — Rewrite role section for clarity
-- **[code]** "5. Remove dead export in utils.ts" — Delete unused `formatDate` export
-- **[workflow]** "7. Add directive for reading CLAUDE.md first" — Prevent repeated context misses
-- **[structure]** "9. Move orphaned helper to utils/" — Relocate `src/helpers/format.ts`
+This step has three phases: orient, choose, and handle unselected.
 
-Mark selected pending items as `approved` in improvement-plan.md immediately.
+#### Phase 1: Orient
+
+Print a plain overview. No technical jargon. Use these category labels:
+
+| Category | Label | Explanation |
+|----------|-------|-------------|
+| skill | Skill fixes | how your Claude commands and agents are set up |
+| code | Code fixes | source code cleanup and bug prevention |
+| workflow | Workflow | habits for smoother sessions |
+| structure | Structure | file organization and tidiness |
+
+Format:
+```
+I found [N] improvements from the last observation:
+
+  [Label] ([count]) — [explanation]
+  [Label] ([count]) — [explanation]
+  ...
+
+Let's walk through each group so you can pick what to apply.
+```
+
+Only list categories that have pending items.
+
+#### Quick path: 1-2 total items
+
+If there are only 1-2 pending items total, skip the category walk-through. Present a single `AskUserQuestion` with `multiSelect: true` containing all items. Note the category in each description (e.g., "This is a skill fix that...").
+
+Then skip directly to handling unselected items.
+
+#### Phase 2: Choose (category by category)
+
+For each category that has pending items, present one `AskUserQuestion` with `multiSelect: true`:
+
+- **header**: The category label (e.g., `Skill fixes`)
+- **Up to 4 items per question.** If a category has more than 4, split into batches with numbered headers: `Skill fixes 1/2`, `Skill fixes 2/2`
+- Each option:
+  - **label**: Short action phrase, 1-5 words, no jargon (e.g., "Fix startup paths", "Remove dead reports")
+  - **description**: 2-3 sentences in plain language following the Plain-Language Translation Rule below
+
+#### Phase 3: Handle unselected items
+
+After each category (or batch), if ANY items were NOT selected, ask a follow-up:
+
+```
+AskUserQuestion:
+  question: "What should I do with the [N] items you skipped in [Category Label]?"
+  header: "Skipped"
+  options:
+    - label: "Keep for later"
+      description: "They'll stay pending for next time you run /si:apply"
+    - label: "Reject them"
+      description: "Removed permanently — they won't come back"
+```
+
+**Skip this follow-up if the user selected everything in that category.**
+
+Mark rejected items immediately: set status to `**Status:** rejected (YYYY-MM-DD)`.
 
 ### 3. Route by category
 
@@ -96,11 +149,11 @@ For each applied item:
 - Change `**Status:** approved` to `**Status:** applied (YYYY-MM-DD)`
 - Move the item from `## Pending` to `## Applied`
 
-For any items the user explicitly rejected during selection:
+For any items rejected during the unselected follow-up:
 - Change status to `**Status:** rejected (YYYY-MM-DD)`
 - Move from `## Pending` to `## Rejected`
 
-Items not selected are left as `pending` — not rejected.
+Items not selected and not rejected stay as `pending`.
 
 ### 6. Print summary
 
@@ -117,6 +170,30 @@ Skill files modified: [N]
 Structure changes: [N]
 ```
 
+## Plain-Language Translation Rule
+
+When presenting items in AskUserQuestion (Phase 2), translate the technical improvement-plan.md format into human-friendly language.
+
+**Rules:**
+- Use "you" and "your" — address the user directly
+- First sentence: what's wrong and why should they care
+- Second sentence: what this fix does
+- Third (optional): what gets better
+- **Never mention file paths, line numbers, or technical identifiers in the selection UI**
+- No code formatting, no backticks, no raw evidence
+
+Example translation:
+
+```
+BAD (raw from report):
+  "observe.md Step 5 writes reasoning.md, system-observations.md, and
+   data-patterns.md which are overwritten each run"
+
+GOOD (translated):
+  "The observe command creates extra report files that nobody reads.
+   This removes them so observations run faster."
+```
+
 ## Constraints
 
 - **Never apply without user selection.** User picks items first.
@@ -125,4 +202,6 @@ Structure changes: [N]
 - **Preserve improvement-plan.md history.** Never delete entries — move between sections.
 - **active-directives.md must stay concise.** It's read every session. No bloat.
 - **Follow the Ripple Rule for structure changes.** Every moved file must have its imports updated.
-- **Unselected items stay pending.** Only explicitly rejected items get moved to Rejected.
+- **Unselected items stay pending unless explicitly rejected.** The follow-up question determines fate.
+- **4 items max per AskUserQuestion.** Split larger categories into numbered batches.
+- **No technical jargon in selection UI.** All descriptions must follow the Plain-Language Translation Rule.
