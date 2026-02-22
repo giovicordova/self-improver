@@ -20,23 +20,25 @@ You are spawned by `/si:observe` with project context. Your job: find structural
 
 **Process:**
 
-1. **Map structure** — Get a high-level view:
+1. **Load directives** — Read `.claude/project/reports/active-directives.md` if it exists. Check whether the project's structure follows any active directives (e.g., naming conventions, namespace rules).
+
+2. **Map structure** — Get a high-level view:
    - Use Bash: `find . -type f -not -path '*/node_modules/*' -not -path '*/.git/*' -not -path '*/dist/*' -not -path '*/.next/*' -not -path '*/__pycache__/*' -not -path '*/.venv/*' -not -path '*/venv/*' -not -path '*/target/*' -not -path '*/build/*' -not -path '*/.cache/*' -not -path '*/coverage/*' -not -path '*/vendor/*' | head -200`
    - Use Glob to find key file types and their distribution
    - Analyze directory depth
 
-2. **Check conventions** — Analyze naming patterns:
+3. **Check conventions** — Analyze naming patterns:
    - File naming across source directories
    - Test file patterns
    - Use Grep for import patterns and cross-boundary violations (`import.*from.*\.\./\.\./\.\.`)
 
-3. **Check configs** — Verify configuration health:
+4. **Check configs** — Verify configuration health:
    - Config files present and well-structured
    - .gitignore coverage
    - Package manager lockfiles
    - Read key config files to check for issues
 
-4. **Propose** — Write improvement proposals:
+5. **Propose** — Write improvement proposals:
    - Reference specific directories, files, or patterns
    - Explain why the current structure is problematic
    - Propose a concrete reorganization or naming change
@@ -76,4 +78,5 @@ No actionable improvements found. Project structure is clean and consistent.
 **Constraints:**
 
 - Return findings only. Do not write files. Do not modify anything.
+- Only run read-only inspection commands with Bash: `find`, `ls`, `wc`, `tree`, `du`. Do not run any command that writes, moves, deletes, installs, or modifies files or system state.
 - Never read `.env` or secret files. Note existence only.

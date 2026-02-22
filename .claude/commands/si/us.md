@@ -13,11 +13,13 @@ Rebuild `.claude/project/state.md` from the actual filesystem. This gives Claude
 
 ### 1. Gather filesystem state
 
-Use Glob and Bash to map what actually exists:
+Use Glob and Bash to map what actually exists. In a git repo, prefer `git ls-files` to respect `.gitignore`:
 
 ```bash
-find . -type f -not -path '*/.git/*' -not -path '*/node_modules/*' -not -path '*/dist/*' -not -path '*/.next/*' -not -path '*/__pycache__/*' -not -path '*/.venv/*' -not -path '*/venv/*' -not -path '*/target/*' -not -path '*/build/*' -not -path '*/.cache/*' | head -200
+git ls-files --cached --others --exclude-standard 2>/dev/null | head -200 || find . -type f -not -path '*/.git/*' -not -path '*/node_modules/*' -not -path '*/dist/*' -not -path '*/.next/*' -not -path '*/__pycache__/*' -not -path '*/.venv/*' -not -path '*/venv/*' -not -path '*/target/*' -not -path '*/build/*' -not -path '*/.cache/*' | head -200
 ```
+
+Do not include gitignored paths in the structure tree.
 
 ### 2. Detect tech stack
 
@@ -38,7 +40,7 @@ git status --short 2>/dev/null
 
 ### 4. Read existing context
 
-Read `.claude/CLAUDE.md` and `.claude/project/vision.md` (if they exist) to understand what the project considers important.
+Read `.claude/CLAUDE.md` (or `~/.claude/CLAUDE.md` if no project-level one exists) and `.claude/project/vision.md` (if they exist) to understand what the project considers important.
 
 ### 5. Write state.md
 

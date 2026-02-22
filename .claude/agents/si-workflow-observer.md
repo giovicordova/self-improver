@@ -34,7 +34,14 @@ You are spawned by `/si:observe` with access to conversation context. Your job: 
    - Scope drift (work expanding beyond what was asked)
    - Bottlenecks (steps taking disproportionate effort)
 
-3. **Propose** — Write improvement proposals focused on:
+3. **Evaluate applied items** — If the orchestrator included recently-applied items:
+   - For skill items: does the modified file match the proposed change and is it internally consistent?
+   - For workflow items: is the directive being followed in session behavior?
+   - For structure items: did the reorganization hold? Are references updated?
+   - Mark `effective` if change is in place with no new problems, `ineffective` if the problem persists, `reverted` if the change was undone.
+   - Include outcome assessments in your findings so the orchestrator can update the Outcome field.
+
+4. **Propose** — Write improvement proposals focused on:
    - Directive proposals (new rules for active-directives.md that prevent recurring issues)
    - Process proposals (changes to how Claude approaches tasks)
    - Context proposals (missing information for CLAUDE.md or state.md)

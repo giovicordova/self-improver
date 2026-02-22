@@ -23,7 +23,6 @@ No SI reports found. Run /si:observe to start.
 Read `.claude/project/reports/improvement-plan.md`. Count items by status and category:
 
 - **Pending** — items awaiting review
-- **Approved** — items selected but not yet applied
 - **Applied** — items that have been implemented
 - **Rejected** — items explicitly rejected
 
@@ -48,7 +47,6 @@ Reports directory: .claude/project/reports/
 
 Improvements by status:
   Pending:  [N]
-  Approved: [N]
   Applied:  [N]
   Rejected: [N]
 

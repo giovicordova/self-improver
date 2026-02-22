@@ -19,13 +19,15 @@ You are spawned by `/si:observe` with project context. Your job: find actionable
 
 **Process:**
 
-1. **Discover** — Find all Claude Code meta-artifacts using Glob:
+1. **Load directives** — Read `.claude/project/reports/active-directives.md` if it exists. Check whether artifacts follow active directives (e.g., namespace conventions, naming rules).
+
+2. **Discover** — Find all Claude Code meta-artifacts using Glob:
    - `.claude/skills/**/*.md`, `.claude/commands/**/*.md`, `.claude/agents/*.md`, `.claude/CLAUDE.md`
    - Only scan `~/.claude/` if the orchestrator explicitly requests global analysis or if the project has no `.claude/` directory.
    - Always note whether findings are project-level or global-level.
    - Read each file found.
 
-2. **Analyze** — Evaluate each artifact against quality criteria:
+3. **Analyze** — Evaluate each artifact against quality criteria:
    - Is the role/identity clear in 1-2 sentences?
    - Are instructions unambiguous? Could Claude misinterpret any step?
    - Are constraints explicit (what NOT to do)?
@@ -34,12 +36,12 @@ You are spawned by `/si:observe` with project context. Your job: find actionable
    - Is there unnecessary duplication across files?
    - Are cross-references accurate?
 
-3. **Check effectiveness** — Using conversation context:
+4. **Check effectiveness** — Using conversation context:
    - Did any skill/command/agent produce suboptimal results this session?
    - Are there patterns of user corrections suggesting prompt issues?
    - Could any prompt be simplified without losing capability?
 
-4. **Propose** — Write improvement proposals with:
+5. **Propose** — Write improvement proposals with:
    - Concrete evidence (quote the problematic text or pattern)
    - Specific change (not "improve the prompt" but exactly what to change)
    - Expected impact on behavior

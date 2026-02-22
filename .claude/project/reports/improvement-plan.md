@@ -4,6 +4,146 @@
 
 ## Applied
 
+### 19. Orphaned supplementary report files contradict applied improvement #6
+**Category:** structure
+**Evidence:** `reasoning.md`, `system-observations.md`, `data-patterns.md` still exist in `.claude/project/reports/`. Applied item #6 removed them from the observe workflow, but the existing files were never deleted. They appear as untracked in `git status` and contain stale data from the first observation.
+**Current:** Three stale files contradict the applied decision. If any future observer or session reads them, it gets outdated information.
+**Proposed:** Delete the three files. Add a directive to active-directives.md: "When an improvement removes a file or output, delete existing instances as part of the apply step."
+**Impact:** Completes cleanup started by item #6. Removes git status noise and stale data risk.
+**Status:** applied (2026-02-22)
+**Outcome:** pending-review
+
+### 20. Phantom "approved" lifecycle state never produced
+**Category:** skill
+**Evidence:** `apply.md` line 16 collects items with `Status: pending or approved`. `status.md` line 32 lists "Approved" as a status. But nothing in the workflow ever sets an item to `approved` — items go directly from `pending` to `applied` or `rejected`.
+**Current:** Dead lifecycle state adds confusion. `/si:status` always shows `Approved: 0` because nothing generates that state.
+**Proposed:** Remove "approved" as a recognized status. Simplify apply.md to only collect `pending` items and status.md to not count approved. Lifecycle becomes: `pending → applied | rejected`.
+**Impact:** Eliminates a phantom state that makes the system harder to understand.
+**Status:** applied (2026-02-22)
+**Outcome:** pending-review
+
+### 21. apply.md doesn't write the Outcome field when moving items to Applied
+**Category:** skill
+**Evidence:** `observe.md` line 101 documents `**Outcome:** pending-review` for applied items. But `apply.md` step 5 (which actually moves items) has no instruction to add the Outcome field. Related: #22.
+**Current:** The Outcome field from improvement #14 is defined in observe.md but never written by the command that applies items. The feedback loop is structurally broken.
+**Proposed:** Add to apply.md step 5: "Add `**Outcome:** pending-review` to each applied item."
+**Impact:** Without this, the Outcome field is orphaned. The feedback loop (improvement #14) remains non-functional.
+**Status:** applied (2026-02-22)
+**Outcome:** pending-review
+
+### 22. Outcome field has no evaluation criteria — feedback loop is write-only
+**Category:** workflow
+**Evidence:** All 18 applied items have `Outcome: pending-review`. No component defines how to evaluate outcomes or transition them to `effective`/`ineffective`/`reverted`. The workflow observer's fallback mode mentions applied items needing follow-up but provides no rubric. Related: #21.
+**Current:** The Outcome field is written but never transitions. The feedback loop exists structurally but has no evaluation logic — the #1 near-term goal in vision.md.
+**Proposed:** Add outcome evaluation guidance to `si-workflow-observer.md`: "When assessing recently-applied items: (skill) does the modified file match the proposed change and is it internally consistent? (workflow) is the directive being followed? (structure) did the reorganization hold? Mark `effective` if change is in place with no new problems, `ineffective` if problem persists, `reverted` if change was undone."
+**Impact:** Closes the feedback loop. Without evaluation criteria, Outcome stays `pending-review` forever.
+**Status:** applied (2026-02-22)
+**Outcome:** pending-review
+
+### 23. .gitignore has no coverage for ephemeral report files
+**Category:** structure
+**Evidence:** `.gitignore` covers `.claude/plans/` but nothing in `.claude/project/reports/`. Only `improvement-plan.md` and `active-directives.md` have persistent value. Three untracked files (finding #19) confirm this gap. As SI evolves with new observers, each output would need manual .gitignore updates.
+**Current:** No protection against accidental commits of generated report files.
+**Proposed:** Add broad pattern with exceptions to `.gitignore`:
+```
+.claude/project/reports/*.md
+!.claude/project/reports/improvement-plan.md
+!.claude/project/reports/active-directives.md
+```
+**Impact:** Durable policy that scales with future observer additions.
+**Status:** applied (2026-02-22)
+**Outcome:** pending-review
+
+### 24. observe.md skill-observer spawn checks global paths despite scoping guidance
+**Category:** skill
+**Evidence:** `observe.md` lines 31-35 check `~/.claude/skills/`, `~/.claude/commands/`, `~/.claude/agents/` to decide whether to spawn the skill observer. But improvement #7 added scoping guidance telling the observer to focus on project `.claude/` only. The orchestrator uses global directories to spawn the observer, then tells it not to look at them.
+**Current:** Contradiction: spawn decision based on global state, but observer told to ignore global state.
+**Proposed:** Remove global paths from spawn detection criteria. Spawn based on project-level `.claude/skills/`, `.claude/commands/`, `.claude/agents/`, or `CLAUDE.md` with rules. Global analysis should be an explicit opt-in flag.
+**Impact:** Aligns spawn logic with scoping guidance from improvement #7.
+**Status:** applied (2026-02-22)
+**Outcome:** pending-review
+
+### 25. structure-observer Bash constraints are implicit unlike code-observer
+**Category:** skill
+**Evidence:** `si-code-observer.md` has explicit Bash safety constraints from improvement #8. `si-structure-observer.md` also has Bash access but only says "Do not modify anything" — no explicit command-level constraints like the code observer.
+**Current:** Both observers have Bash access but only one has explicit safety boundaries.
+**Proposed:** Add to si-structure-observer.md constraints: "Only run read-only inspection commands with Bash: `find`, `ls`, `wc`, `tree`, `du`. Do not run any command that writes, moves, deletes, installs, or modifies files or system state."
+**Impact:** Closes the same safety gap that improvement #8 addressed for the code observer.
+**Status:** applied (2026-02-22)
+**Outcome:** pending-review
+
+### 26. observe.md Steps 2 and 3 have overlapping spawn instructions
+**Category:** skill
+**Evidence:** Step 2 describes detection criteria. Step 3 repeats spawning guidance with an "Example spawn pattern" section. The `subagent_type` guidance and context-to-include appear in two places that could diverge.
+**Current:** Duplication between detection logic and spawn instructions creates risk of divergence during future edits.
+**Proposed:** Consolidate Steps 2 and 3 into a single step. Remove the "Example spawn pattern" sub-section and fold its unique content into the main instruction.
+**Impact:** Reduces ambiguity and eliminates divergence risk.
+**Status:** applied (2026-02-22)
+**Outcome:** pending-review
+
+### 27. Tracked plan file defeats .gitignore coverage
+**Category:** structure
+**Evidence:** `.gitignore` has `.claude/plans/` but `deep-knitting-clarke.md` was committed before .gitignore was created. Git ignores only affect untracked files, so the plan file is permanently tracked despite the rule.
+**Current:** False sense of .gitignore coverage. Implementation scaffolding persists in the repo.
+**Proposed:** Run `git rm --cached .claude/plans/deep-knitting-clarke.md` to untrack while keeping on disk. Remove the `plans/` entry from state.md's structure tree.
+**Impact:** Makes .gitignore effective for plans directory. Removes scaffolding from tracked repo.
+**Status:** applied (2026-02-22)
+**Outcome:** pending-review
+
+### 28. us.md doesn't consult .gitignore — gitignored paths appear in structure tree
+**Category:** skill
+**Evidence:** `us.md` step 1 uses `find` with hardcoded exclusions but doesn't check `.gitignore`. This caused the plans directory (gitignored) to appear in state.md's structure tree.
+**Current:** Any gitignored path not in the hardcoded list appears in the structure output.
+**Proposed:** In us.md, prefer `git ls-files` when in a git repo (tracked + untracked-but-not-ignored), fall back to `find` for non-git repos. Add constraint: "Do not include gitignored paths in the structure tree."
+**Impact:** State.md structure tree shows only meaningful project files. Prevents the issue found in #27 systemically.
+**Status:** applied (2026-02-22)
+**Outcome:** pending-review
+
+### 29. Observers don't read active-directives.md (except workflow)
+**Category:** skill
+**Evidence:** Only `si-workflow-observer.md` references active-directives.md. The skill and structure observers don't read it, despite directives potentially containing conventions relevant to their domains (e.g., naming rules, namespace conventions).
+**Current:** Active directives are a shared knowledge base consumed by only one of four observers.
+**Proposed:** Add active-directives.md to the discovery step of skill and structure observers: "Read `.claude/project/reports/active-directives.md` if it exists — check whether artifacts/structure follow active directives."
+**Impact:** Strengthens feedback loop — directives from one cycle get checked by the next across all domains.
+**Status:** applied (2026-02-22)
+**Outcome:** pending-review
+
+### 30. us.md doesn't fall back to global CLAUDE.md like observe.md does
+**Category:** skill
+**Evidence:** `observe.md` reads `.claude/CLAUDE.md or ~/.claude/CLAUDE.md`. `us.md` only checks `.claude/CLAUDE.md`. Projects relying on global CLAUDE.md get incomplete state.md context.
+**Current:** Inconsistency between the two commands' context-gathering behavior.
+**Proposed:** Add the same fallback in us.md: "Read `.claude/CLAUDE.md` (or `~/.claude/CLAUDE.md` if no project-level one exists)."
+**Impact:** Ensures state.md reflects conventions even when defined globally.
+**Status:** applied (2026-02-22)
+**Outcome:** pending-review
+
+### 31. No sync-check between repo and global copies
+**Category:** workflow
+**Evidence:** CLAUDE.md says "Changes here should be synced back to `~/.claude/`" but there's no mechanism to detect or warn when copies drift. After applying improvements, the user must manually copy files.
+**Current:** Sync is entirely manual with no reminder or verification.
+**Proposed:** Add a step to `/si:apply`'s summary: "Files modified in this repo. Sync to global: `cp .claude/agents/si-*.md ~/.claude/agents/ && cp .claude/commands/si/*.md ~/.claude/commands/si/`". Add a directive about syncing after changes.
+**Impact:** Prevents drift between canonical source and deployed copies.
+**Status:** applied (2026-02-22)
+**Outcome:** pending-review
+
+### 32. observe.md structure observer detection has redundant criteria
+**Category:** skill
+**Evidence:** Detection lists three OR conditions: (1) "5+ source files across 2+ dirs", (2) ".claude/ with agents/commands", (3) "5+ files of any type across 2+ dirs". Condition 3 is a superset of condition 1 — condition 1 is redundant.
+**Current:** Three conditions where two would suffice. Minor clarity issue.
+**Proposed:** Remove condition 1. Keep "5+ files of any type across 2+ directories" and "has .claude/ with agents and commands."
+**Impact:** Minor clarity improvement. Reduces ambiguity in edge cases.
+**Status:** applied (2026-02-22)
+**Outcome:** pending-review
+
+### 33. state.md git section says "2 commits" — actual count is 4
+**Category:** structure
+**Evidence:** state.md line 68: "2 commits + uncommitted changes". Actual: 4 commits (`e49f1d2`, `ab61c3f`, `40dbb47`, `90e9998`), clean working tree.
+**Current:** state.md was rebuilt as item #15 but before two subsequent commits. Claude reads stale git info at session start.
+**Proposed:** Run `/si:us` to rebuild state.md. This is exactly what the command was built for.
+**Impact:** Trivial. Keeps session-start context accurate.
+**Status:** applied (2026-02-22)
+**Outcome:** pending-review
+
 ### 1. Missing `/us` command file in repository
 **Category:** skill
 **Evidence:** state.md line 13, CLAUDE.md line 25, README.md line 41 all reference `commands/us.md`. File does not exist anywhere in the repo. README installation instructs `cp .claude/commands/us.md ~/.claude/commands/` — this will fail.

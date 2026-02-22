@@ -24,14 +24,12 @@ Then read these files to understand the project:
 - `.claude/project/reports/improvement-plan.md` — previous proposals (if exists, get next ID number)
 - `.claude/project/reports/active-directives.md` — current directives (if exists)
 
-### 2. Detect relevant observers
+### 2. Detect and spawn observers
 
-Check what the project contains and decide which observers to spawn:
+Check what the project contains and spawn relevant observers **in parallel** using the Task tool. Launch them simultaneously — fresh context per observer = peak quality.
 
 **si-skill-observer** — Spawn if ANY of these exist:
-- `.claude/skills/` or `~/.claude/skills/`
-- `.claude/commands/` or `~/.claude/commands/`
-- `.claude/agents/` or `~/.claude/agents/`
+- `.claude/skills/`, `.claude/commands/`, `.claude/agents/`
 - `CLAUDE.md` with rules/instructions
 
 **si-code-observer** — Spawn if source code exists:
@@ -41,13 +39,8 @@ Check what the project contains and decide which observers to spawn:
 **si-workflow-observer** — Always spawn. It analyzes the current session's execution patterns from conversation context.
 
 **si-structure-observer** — Spawn if the project has structural complexity:
-- More than 5 source files across 2+ directories
-- OR has a `.claude/` directory with agents and commands (meta-projects like SI itself)
+- Has a `.claude/` directory with agents and commands (meta-projects like SI itself)
 - OR has 5+ files of any type across 2+ directories
-
-### 3. Spawn observers in parallel
-
-Use the Task tool to spawn each relevant observer as a subagent. Launch them **in parallel** — this is the whole point of the architecture (fresh context per observer = peak quality).
 
 For each observer, provide this context in the prompt:
 - Project path and name
@@ -56,13 +49,7 @@ For each observer, provide this context in the prompt:
 - For workflow observer: provide detailed session events — list every error, user correction, retry loop, and commands run with outcomes. If no significant session events occurred, note that explicitly so the observer can use its fallback analysis mode.
 - For workflow observer: also include any recently-applied items (from improvement-plan.md ## Applied section) so the observer can assess whether they had the intended effect.
 
-Example spawn pattern:
-
-Use the Task tool to spawn all relevant observers **simultaneously in a single message**. Each Task call needs:
-- `subagent_type` matching the agent name (e.g., `si-skill-observer`)
-- A prompt containing: project path, CLAUDE.md conventions, previous proposal IDs/titles (to avoid duplicates), and for workflow observer: session events summary (errors, user corrections, retries)
-
-### 4. Collect and merge results
+### 3. Collect and merge results
 
 After all observers return:
 
@@ -71,7 +58,7 @@ After all observers return:
 3. Deduplicate — if two proposals reference the same file AND propose the same type of change, keep the more specific one. If they describe different symptoms of the same root cause, keep both but add a cross-reference: "Related: #[other-ID]"
 4. Sort by category: skill, code, workflow, structure
 
-### 5. Write reports
+### 4. Write reports
 
 **improvement-plan.md** — Append new proposals to `## Pending`. Never overwrite existing pending/approved items. Each item gets the `**Category:**` field:
 
@@ -103,7 +90,7 @@ Valid outcome values: `pending-review` | `effective` | `ineffective` | `reverted
 
 Only write `improvement-plan.md`. Do not create supplementary report files — the improvement plan is the single source of truth.
 
-### 6. Print summary
+### 5. Print summary
 
 ```
 Observation complete.

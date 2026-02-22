@@ -13,11 +13,11 @@ Read improvement-plan.md, walk the user through each category conversationally, 
 
 ### 1. Read the plan
 
-Read `.claude/project/reports/improvement-plan.md`. Collect all items with `**Status:** pending` or `**Status:** approved`.
+Read `.claude/project/reports/improvement-plan.md`. Collect all items with `**Status:** pending`.
 
-If no pending or approved items exist, report and exit:
+If no pending items exist, report and exit:
 ```
-No pending or approved items in improvement-plan.md. Run /si:observe first.
+No pending items in improvement-plan.md. Run /si:observe first.
 ```
 
 Group items by category (`skill`, `code`, `workflow`, `structure`) and count each group.
@@ -146,7 +146,8 @@ For structure items:
 ### 5. Update improvement-plan.md
 
 For each applied item:
-- Change `**Status:** approved` to `**Status:** applied (YYYY-MM-DD)`
+- Change `**Status:** pending` to `**Status:** applied (YYYY-MM-DD)`
+- Add `**Outcome:** pending-review` to the item
 - Move the item from `## Pending` to `## Applied`
 
 For any items rejected during the unselected follow-up:
